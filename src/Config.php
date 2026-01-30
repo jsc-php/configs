@@ -34,39 +34,28 @@ class Config
         }
     }
 
-    public function set(string $key, mixed $value, ?string $section = null): void
-    {
-        if ($section) {
-            $this->data[$section][$key] = $value;
-        } else {
-            $this->data[$key] = $value;
-        }
-    }
-
     public function save()
     {
         $this->parser->writeFile($this->data);
     }
 
-    public function delete(string $key, ?string $section = null): void
+    public function delete(string $key): void
     {
-        if ($section) {
-            if (isset($this->data[$section][$key])) {
-                unset($this->data[$section][$key]);
-            }
-        } else {
-            if (!isset($this->data[$key])) {
-                unset($this->data[$key]);
-            }
+
+        if (!isset($this->data[$key])) {
+            unset($this->data[$key]);
         }
+
     }
 
-    public function get(string $key, ?string $section = null): mixed
+    public function __get(string $key): mixed
     {
-        if ($section) {
-            return $this->data[$section][$key] ?? null;
-        }
         return $this->data[$key] ?? null;
+    }
+
+    public function __set(string $key, mixed $value): void
+    {
+        $this->data[$key] = $value;
     }
 
 }
