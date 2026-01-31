@@ -8,9 +8,6 @@ abstract class Parser
 
     public function __construct(string $file_path)
     {
-        if (!is_readable($file_path)) {
-            throw new \Exception("File not readable");
-        }
         $this->file_path = $file_path;
     }
 
@@ -18,5 +15,10 @@ abstract class Parser
     public abstract function parseFile(): array;
 
     public abstract function writeFile(array $data): void;
+
+    protected function _write(string $data): void
+    {
+        file_put_contents($this->file_path, $data);
+    }
 
 }

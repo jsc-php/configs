@@ -10,7 +10,7 @@ class Ini extends Parser
             throw new \Exception("{$this->file_path} not writable");
         }
         $ini = $this->arrayToIni($data);
-        file_put_contents($this->file_path, $ini);
+        $this->_write($ini);
     }
 
     private function arrayToIni(array $data): string
