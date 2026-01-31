@@ -28,7 +28,7 @@ class Config
         $this->parser = match ($extension) {
             'ini' => new Ini($file_path),
             'json' => new Json($file_path),
-            'yaml' => new Yaml($file_path),
+            'yaml', 'yml' => new Yaml($file_path),
             default => throw new Exception("Unsupported file extension: {$extension}")
         };
         if (file_exists($file_path) && is_readable($file_path)) {
