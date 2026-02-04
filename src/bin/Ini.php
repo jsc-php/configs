@@ -18,33 +18,25 @@ class Ini extends Parser
 
     private function arrayToIni(array $data): string
     {
-        $result = '';
-
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                // Add section header
-                $result .= "[$key]\n";
-
-                // Add key-value pairs within the section
-                foreach ($value as $subKey => $subValue) {
-                    if (is_array($subValue)) {
-                        // Handle array values (multi-value keys)
-                        foreach ($subValue as $item) {
-                            $result .= $subKey . '[] = ' . $this->formatValue($item) . "\n";
-                        }
-                    } else {
-                        $result .= $subKey . ' = ' . $this->formatValue($subValue) . "\n";
+        $root = '';
+        $ret = '';
+        $keys = array_keys($data);
+        foreach ($keys as $key) {
+            $current = $data[$key];
+            if (is_array($current)) {
+                if (array_is_list($current)) {
+                    foreach ($current as $item) {
+                        $root .= $key . '[] = ' . $this->formatValue($item) . PHP_EOL;
                     }
+                } else {
+                    $ret .= '[' . $key . ']' . PHP_EOL . $this->arrayToIni($current) . PHP_EOL;
+                    $ret .= PHP_EOL;
                 }
-
-                $result .= "\n";
             } else {
-                // Top-level key-value pairs (before any section)
-                $result .= $key . ' = ' . $this->formatValue($value) . "\n";
+                $root .= $key . ' = ' . $this->formatValue($current) . PHP_EOL;
             }
         }
-
-        return rtrim($result);
+        return rtrim($root . PHP_EOL . $ret);
     }
 
     private function formatValue($value): string

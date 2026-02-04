@@ -49,7 +49,7 @@ class Config
         return file_put_contents($this->file_path, $content);
     }
 
-    public function saveAs(string $file_path, Type $type): false|int
+    public function saveAs(string $file_path, Type $type, bool $return = false): string|false|int
     {
         $parser = match ($type) {
             Type::Ini  => new Ini($this->file_path),
@@ -64,6 +64,9 @@ class Config
             throw new Exception("Invalid file extension: {$extension}");
         }
         $content = $parser->convertArray($this->data);
+        if ($return) {
+            return $content;
+        }
         return file_put_contents($file_path, $content);
     }
 
@@ -88,7 +91,7 @@ class Config
         }
     }
 
-    public function getData(): array
+    public function getAll(): array
     {
         return $this->data;
     }
